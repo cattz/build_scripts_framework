@@ -1,0 +1,57 @@
+buildcxx:
+  config:
+    foo: baz
+    output: build_output
+  tasks:
+    debug:
+      config:
+        foo: bar
+      steps:
+        - clean
+        - cmake:
+            cmake_args: -DPOF=debug
+        - make_install
+        - collect_artifacts
+    release:
+      steps:
+        - clean
+        - cmake:
+            cmake_args: -DPOF=release
+        - make_install
+        - collect_artifacts
+
+release:
+  config:
+    ci_repo: ci-repo
+    releases_repo: releases-repo
+    properties:
+      group: property
+      global: property
+  tasks:
+    publish:
+      config:
+        properties:
+          moo: maa
+          shoo: shaa
+      steps:
+        - publish
+
+    promote:
+      config:
+        properties:
+          moo: mee
+          koo: keee
+      steps:
+        - promote
+
+checks:
+  config:
+    mode: fail
+  tasks:
+    pre_build:
+      config:
+        pb: true
+      excluded:
+        - test_foo
+      includded:
+        - test_muu
