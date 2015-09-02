@@ -43,7 +43,7 @@ def main():
     group = args.group
     task = args.task
     task_definitions = get_config('tasks.yml')
-    global_config = get_config('env.yml')
+    #global_config = get_config('env.yml')
     print 'Running %s:%s' % (group, task)
 
     group_config = dict()
@@ -61,7 +61,7 @@ def main():
     if 'config' in task_definitions[group]['tasks'][task]:
         task_config = task_definitions[group]['tasks'][task]['config']
 
-    resulting_config = global_config
+    resulting_config = task_definitions
     resulting_config.update(group_config)
     resulting_config.update(task_config)
 
