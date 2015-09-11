@@ -1,13 +1,14 @@
 buildcxx:
   config:
-    foo: baz
+    foo: runner
     output: build_output
   tasks:
     debug:
       config:
-        foo: bar
+        foo: task
       steps:
-        - clean
+        - clean:
+            foo: step
         - cmake:
             cmake_args: -DPOF=debug
         - make_install

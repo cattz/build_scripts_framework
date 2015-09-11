@@ -3,11 +3,12 @@ class Build(object):
     Build class
     """
     def __init__(self):
-        pass
+        self.artifactory = None
 
-    def clean(self, folders=['default']):
+    def clean(self, folders=None, foo='method'):
+        folders = ['default'] if folders is None else folders
         for fld in folders:
-            print 'Cleaning %s' % fld
+            print 'Cleaning %s, using %s config' % (fld, foo)
 
     def cmake(self, cmake_args):
         print 'cmake %s' % cmake_args

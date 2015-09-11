@@ -6,11 +6,11 @@ import inspect
 import importlib
 import pkg_resources
 
-from pjdby.task_groups import *
+from pjdby.runners import *
 
 def parse_arguments():
     mainparser = ArgumentParser('pyb')
-    mainparser.add_argument('group', help='Task group as specified in tasks.yml')
+    mainparser.add_argument('runner', help='Runner as specified in tasks.yml')
     mainparser.add_argument('task', help='Task to run as specified in tasks.yml')
     mainparser.add_argument('-s', '--source', default='source', help='Location of source to be build')
     #mainparser.add_argument('--user', help='User name. Will use this credentials whenever is needed')
@@ -27,7 +27,7 @@ def flatten_dict(dd, separator='_', prefix=''):
             for k, v in flatten_dict(vv, separator, kk).items()
             } if isinstance(dd, dict) else {prefix: dd}
 
-def get_task_group_class(group, module='pjdby.task_groups'):
+def get_runner_class(group, module='pjdby.runners'):
     # For a task to be visible, it has to be imported in tasks/__init__.py
     groups = inspect.getmembers(sys.modules[module], inspect.isclass)
     group_list = dict()
@@ -38,41 +38,50 @@ def get_task_group_class(group, module='pjdby.task_groups'):
         group_list[group_name] = group_class_name
     return getattr(importlib.import_module(module), group_list[group])
 
+def get_resulting_task_config(default_tasks, runner_config, task_config):
+    """
+    Returns the  resulting by overriding
+    :param default_tasks: 
+    :param runner_config: 
+    :param task_config: 
+    :return:
+    """
+    resulting_config = default_tasks
+    resulting_config.update(runner_config)
+    resulting_config.update(task_config)
+    return resulting_config
+
 def main():
     args = parse_arguments()
-    group = args.group
+    runner = args.runner
     task = args.task
-    task_definitions = get_config('tasks.yml')
+    default_tasks = get_config('tasks.yml')
     #global_config = get_config('env.yml')
-    print 'Running %s:%s' % (group, task)
 
-    group_config = dict()
+    print 'Running %s:%s' % (runner, task)
+
+    runner_config = dict()
     task_config = dict()
 
-    if group not in task_definitions:
-        print 'ERROR: group not defined'
+    if runner not in default_tasks:
+        print 'ERROR: runner not defined in tasks'
+        sys.exit(-1)
+    if task not in default_tasks[runner]['tasks']:
+        print 'ERROR task %s not defined in runner %s' % (task, runner)
+        sys.exit(-1)
 
-    if 'config' in task_definitions[group]:
-        group_config = task_definitions[group]['config']
+    task_definition = {tsk: default_tasks[runner]['tasks'][tsk] for tsk in default_tasks[runner]['tasks'] if tsk == task}
 
-    if task not in task_definitions[group]['tasks']:
-        print 'ERROR task %s not defined in group %s' % (task, group)
+    if 'config' in default_tasks[runner]:
+        runner_config = default_tasks[runner]['config']
 
-    if 'config' in task_definitions[group]['tasks'][task]:
-        task_config = task_definitions[group]['tasks'][task]['config']
+    if 'config' in default_tasks[runner]['tasks'][task]:
+        task_config = default_tasks[runner]['tasks'][task]['config']
 
-    resulting_config = task_definitions
-    resulting_config.update(group_config)
-    resulting_config.update(task_config)
-
-    taskGroup = get_task_group_class(group)
-    print taskGroup
-    tg = taskGroup()
-    tg.do(task, resulting_config)
-
-    print resulting_config
-
-
+    runnerClass = get_runner_class(runner)
+    print runnerClass
+    rnr = runnerClass(task_definition, runner_config, task_config)
+    rnr.do(task)
 
 if __name__ == '__main__':
     main()
