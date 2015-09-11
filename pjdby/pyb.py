@@ -32,7 +32,7 @@ def get_task_group_class(group, module='pjdby.task_groups'):
     groups = inspect.getmembers(sys.modules[module], inspect.isclass)
     group_list = dict()
     for gr in groups:
-        group_class_name , group_class_object = gr
+        group_class_name, group_class_object = gr
         group_name = str(group_class_name.lower())  # Convert to lowercase
         # dict with lower case task name and proper class name capitalization
         group_list[group_name] = group_class_name
@@ -52,7 +52,7 @@ def main():
     if group not in task_definitions:
         print 'ERROR: group not defined'
 
-    if 'config' in task_definitions:
+    if 'config' in task_definitions[group]:
         group_config = task_definitions[group]['config']
 
     if task not in task_definitions[group]['tasks']:

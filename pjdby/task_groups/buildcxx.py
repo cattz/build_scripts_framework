@@ -22,9 +22,9 @@ class BuildCXX(object):
         self.build = Build()
 
     def do(self, task, config):
-        steps = config[self.name]['tasks'][task]
+        steps = config[self.name]['tasks'][task]['steps']
         for step in steps:
-            print('Running step %s' % step)
+            print('-'*80 + '\nRunning step %s' % step)
             step_name, step_config = _parse_step_config(step)
 
             step_method = getattr(self.build, step_name)               # Get the method
