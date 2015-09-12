@@ -35,7 +35,8 @@ release:
           moo: maa
           shoo: shaa
       steps:
-        - publish
+        - publish:
+            path: org/path
 
     promote:
       config:

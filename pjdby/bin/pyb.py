@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 
 from argparse import ArgumentParser
 import yaml
@@ -5,8 +7,8 @@ import sys
 import inspect
 import importlib
 import pkg_resources
-
 from pjdby.runners import *
+
 
 def parse_arguments():
     mainparser = ArgumentParser('pyb')
@@ -17,15 +19,18 @@ def parse_arguments():
     #mainparser.add_argument('--password', help='Password')
     return mainparser.parse_args()
 
+
 def get_config(cfg):
     with open(cfg, 'r') as stream:
         return yaml.load(stream)
+
 
 def flatten_dict(dd, separator='_', prefix=''):
     return {str(prefix) + separator + str(k) if prefix else k: v
             for kk, vv in dd.items()
             for k, v in flatten_dict(vv, separator, kk).items()
             } if isinstance(dd, dict) else {prefix: dd}
+
 
 def get_runner_class(group, module='pjdby.runners'):
     # For a task to be visible, it has to be imported in tasks/__init__.py
@@ -80,7 +85,7 @@ def main():
 
     runnerClass = get_runner_class(runner)
     print runnerClass
-    rnr = runnerClass(task_definition, runner_config, task_config)
+    rnr = runnerClass(args.source, task_definition, runner_config, task_config)
     rnr.do(task)
 
 if __name__ == '__main__':

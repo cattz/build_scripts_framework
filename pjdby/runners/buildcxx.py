@@ -1,18 +1,14 @@
-import inspect
 
+from pjdby.workers import BuildCXXWorker
 from pjdby.runners import Runner
-
-from pjdby import Build
-
 
 
 class BuildCXX(Runner):
     """
     BuildCXX class
     """
-    name = 'buildcxx'
 
     def configure(self):
-        super(BuildCXX, self).configure()
-        self.build.artifactory = 'Artifatory C++'
+        self.build = BuildCXXWorker(source=self.source)
+        self.build.version = '3.4.5'
 

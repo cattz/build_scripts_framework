@@ -2,7 +2,6 @@
 
 import inspect
 
-from pjdby import Build
 
 def _parse_step_config(step):
     # Apply step specific step_config. Defaults are defined in step method level
@@ -16,20 +15,21 @@ def _parse_step_config(step):
 
 class Runner(object):
 
-    def __init__(self, task_definition, runner_config, task_config):
+    def __init__(self, source, task_definition, runner_config, task_config):
+        self.source = source
         self.config = runner_config
         self.config.update(task_config)
         self.task = task_definition
         self.build = None
 
     def configure(self):
-        self.build = Build()
+        self.build = None
 
     def do(self, task):
         self.configure()
         steps = self.task[task]['steps']
         for step in steps:
-            print('-'*80 + '\nRunning step %s' % step)
+            print('-'*120 + '\nRunning step %s' % step)
             step_name, step_config = _parse_step_config(step)
 
             step_method = getattr(self.build, step_name)           # Get the method
