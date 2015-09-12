@@ -12,6 +12,6 @@ class PipelineConfig(object):
         self.binary_repo = None  #: Binary repository manager, ie: Artifactory
 
     def init_vcs(self):
-        """Initialize VCS manager from environment and/or info fron source folder
+        """Initialize VCS manager from environment and/or info from source folder
         """
         pass

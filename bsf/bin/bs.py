@@ -4,10 +4,14 @@
 from argparse import ArgumentParser
 import yaml
 import sys
+import os
 import inspect
 import importlib
 #import pkg_resources
 from bsf.runners import *
+
+this_dir, _ = os.path.split(__file__)
+TEMPLATES_DIR = os.path.join(this_dir, '..', "templates")
 
 
 def parse_arguments():
@@ -60,7 +64,7 @@ def main():
     args = parse_arguments()
     runner = args.runner
     task = args.task
-    default_tasks = get_config('tasks.yml')
+    default_tasks = get_config(os.path.join(TEMPLATES_DIR, 'tasks.yml'))
     #global_config = get_config('env.yml')
 
     print 'Running %s:%s' % (runner, task)
