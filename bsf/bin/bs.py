@@ -6,12 +6,12 @@ import yaml
 import sys
 import inspect
 import importlib
-import pkg_resources
-from pjdby.runners import *
+#import pkg_resources
+from bsf.runners import *
 
 
 def parse_arguments():
-    mainparser = ArgumentParser('pyb')
+    mainparser = ArgumentParser('BSF')
     mainparser.add_argument('runner', help='Runner as specified in tasks.yml')
     mainparser.add_argument('task', help='Task to run as specified in tasks.yml')
     mainparser.add_argument('-s', '--source', default='source', help='Location of source to be build')
@@ -32,7 +32,7 @@ def flatten_dict(dd, separator='_', prefix=''):
             } if isinstance(dd, dict) else {prefix: dd}
 
 
-def get_runner_class(group, module='pjdby.runners'):
+def get_runner_class(group, module='bsf.runners'):
     # For a task to be visible, it has to be imported in tasks/__init__.py
     groups = inspect.getmembers(sys.modules[module], inspect.isclass)
     group_list = dict()
@@ -84,7 +84,6 @@ def main():
         task_config = default_tasks[runner]['tasks'][task]['config']
 
     runnerClass = get_runner_class(runner)
-    print runnerClass
     rnr = runnerClass(args.source, task_definition, runner_config, task_config)
     rnr.do(task)
 

@@ -1,22 +1,22 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pjdby',
+    name='bsf',
     version='0.0.0',
     packages=find_packages('.'),
-    package_dir={'pjdby': 'pjdby'},
+    package_dir={'bsf': 'bsf'},
     include_package_data=True,
     url='',
     license='',
     author='xabier davila',
     author_email='',
-    description='Python jobs driven by yaml config file',
+    description='Build scripts framework',
     install_requires=[
         'pyyaml==3.11'
     ],
     entry_points={
         'console_scripts': [
-            'pyb = pjdby.bin.pyb:main',
+            'bsf = bsf.bin.bs:main',
         ],
     },
 )

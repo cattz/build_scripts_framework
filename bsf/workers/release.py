@@ -1,5 +1,5 @@
 
-from pjdby.pipeline import Pipeline
+from bsf.pipeline import Pipeline
 
 
 class ReleaseWorker(Pipeline):
@@ -12,8 +12,14 @@ class ReleaseWorker(Pipeline):
     def publish(self, path, properties=None):
         """Publish artifacts to an artifact repository
         """
-        print 'Publishing to path %s with properties %s' % (path, properties)
-        print self.binary_repo
+        default_properties = {
+            'publish.date': '23/8/2015',
+            'publish.time': '17:45:30'
+
+        }
+        props = default_properties.update(properties) if properties else default_properties
+        print 'Worker: Publishing to path %s with properties %s' % (path, props)
+        self.binary_repo.publish('artifacts', 'ci-repo', 'org/prod')
 
     def promote(self, repo, properties=None):
         """Promotes artifacts

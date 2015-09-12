@@ -1,4 +1,4 @@
-from pjdby.pipeline import Pipeline
+from bsf.pipeline import Pipeline
 
 class BuildCXXWorker(Pipeline):
     """

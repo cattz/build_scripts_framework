@@ -13,6 +13,7 @@ def _parse_step_config(step):
         step_config = dict()
     return step_name, step_config
 
+
 class Runner(object):
 
     def __init__(self, source, task_definition, runner_config, task_config):
@@ -20,10 +21,10 @@ class Runner(object):
         self.config = runner_config
         self.config.update(task_config)
         self.task = task_definition
-        self.build = None
+        self.pipeline = None
 
     def configure(self):
-        self.build = None
+        pass
 
     def do(self, task):
         self.configure()
@@ -32,7 +33,7 @@ class Runner(object):
             print('-'*120 + '\nRunning step %s' % step)
             step_name, step_config = _parse_step_config(step)
 
-            step_method = getattr(self.build, step_name)           # Get the method
+            step_method = getattr(self.pipeline, step_name)        # Get the method
             valid_args = inspect.getargspec(step_method).args[1:]  # See what arguments from task config are applicable
             print valid_args
             # Compute step config
