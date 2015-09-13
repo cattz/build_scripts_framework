@@ -16,6 +16,8 @@ def _parse_step_config(step):
 
 class Runner(object):
 
+    name = 'runner'  # Name of argument and key used in yaml file
+
     def __init__(self, source, task_definition, runner_config, task_config):
         self.source = source
         self.config = runner_config

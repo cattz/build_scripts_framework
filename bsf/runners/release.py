@@ -7,6 +7,7 @@ from bsf.managers import Artifactory
 class Release(Runner):
     """Release runner
     """
+    name = 'release'
 
     def configure(self):
         self.pipeline = ReleaseWorker(source=self.source)

@@ -36,16 +36,14 @@ def flatten_dict(dd, separator='_', prefix=''):
             } if isinstance(dd, dict) else {prefix: dd}
 
 
-def get_runner_class(group, module='bsf.runners'):
+def get_runner_class(runner_name, module='bsf.runners'):
     # For a task to be visible, it has to be imported in tasks/__init__.py
-    groups = inspect.getmembers(sys.modules[module], inspect.isclass)
-    group_list = dict()
-    for gr in groups:
-        group_class_name, group_class_object = gr
-        group_name = str(group_class_name.lower())  # Convert to lowercase
-        # dict with lower case task name and proper class name capitalization
-        group_list[group_name] = group_class_name
-    return getattr(importlib.import_module(module), group_list[group])
+    runners = inspect.getmembers(sys.modules[module], inspect.isclass)
+    for rn in runners:
+        runner_class_name, runner_class = rn
+        if runner_name == runner_class.name:
+            return runner_class
+    return None
 
 def get_resulting_task_config(default_tasks, runner_config, task_config):
     """
